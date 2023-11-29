@@ -5,13 +5,14 @@
 library(tidyverse)
 library(ggpubr)
 
+# Plot Iris data
 head(iris)
 ggplot(iris,aes(x=Sepal.Length, y= Sepal.Width))+
   geom_point()+
   geom_smooth()
 
 # Per group
-ggplot(iris,aes(x=Sepal.Length, y= Sepal.Width,
-                color = Species))+
+ggplot(iris,aes(x=Sepal.Length, y= Sepal.Width, color = Species))+
   geom_point()+
   geom_smooth()
+
