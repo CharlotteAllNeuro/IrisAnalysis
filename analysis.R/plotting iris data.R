@@ -33,15 +33,14 @@ summary_iris <- iris %>%
   group_by(Species) %>% 
   summarise_all(list("mean" = mean, 
                      "median" = median))
-View(summary_iris)
+summary_iris
 
 # Filter and arrange data
 filtered_iris <- iris %>% 
-  filter(Species != "setosa") %>%               # remove setosa 
-  filter(Sepal.Length > 5) %>%                  # Only show sepal.length above 5
-  filter(Sepal.Width >2 & Petal.Width > 1) %>%  # Only show rows with both sepal and petal width above 2
-  arrange(desc(Sepal.Length))                   # Arrange data according to Sepal.length - high to low
-
+  filter(Species != "setosa") %>%   # remove Species = setosa 
+  filter(Sepal.Length > mean(Sepal.Length)- 1*sd(Sepal.Length) & Sepal.Length < mean(Sepal.Length) + 1*sd(Sepal.Length)) %>%
+                                   # Only take sepal.length that is between mean plus/minus 1 SD
+  arrange(desc(Sepal.Length))      # Arrange data according to Sepal.length - high to low
 filtered_iris
 
 
@@ -57,7 +56,9 @@ ggdensity(filtered_iris, x="Sepal.Length",
 # Bar plot of Filtered data - with comparisons
 ggbarplot(filtered_iris,
           x="Species", y="Petal.Length", 
-          add = "mean_se")+
+          add = "mean_se",
+          color = "Species", fill = "Species",
+          palette = c("pink", "orange"))+
   stat_compare_means(method = "t.test")
 
 # Boxplot of of Filtered data
@@ -72,7 +73,7 @@ filtered_iris_boxplot+stat_compare_means(method = "t.test")
 
 # Boxplot of of full iris data
 iris_boxplot <- ggboxplot(iris, x = "Species", y="Sepal.Length",
-                          color = "Species", palette = c("pink", "orange", "green"),
+                          color = "Species", palette = c("pink", "orange", "green"),# One more color is added to include Species = setosa
                           add = "jitter", 
                           shape = "Species")
 
