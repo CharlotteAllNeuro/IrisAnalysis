@@ -47,3 +47,13 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+## Added
+# Rproj
+test_renv.Rroj
+
+# .RData
+.RData
+
+# renv
+renv
