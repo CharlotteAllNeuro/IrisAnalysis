@@ -39,22 +39,57 @@ View(summary_iris)
 filtered_iris <- iris %>% 
   filter(Species != "setosa") %>%               # remove setosa 
   filter(Sepal.Length > 5) %>%                  # Only show sepal.length above 5
-  filter(Sepal.Width >2 & Petal.Width > 2) %>%  # Only show rows with both sepal and petal width above 2
+  filter(Sepal.Width >2 & Petal.Width > 1) %>%  # Only show rows with both sepal and petal width above 2
   arrange(desc(Sepal.Length))                   # Arrange data according to Sepal.length - high to low
 
 filtered_iris
 
 
+### Data Visualization with ggplot ----
+# 'ggplot2' and 'ggpubr' are called previous 
+
+# Density plot of Filtered data
+ggdensity(filtered_iris, x="Sepal.Length",
+          add = "mean", 
+          color = "Species", fill = "Species",
+          palette = c("pink", "orange"))
+
+# Bar plot of Filtered data - with comparisons
+ggbarplot(filtered_iris,
+          x="Species", y="Petal.Length", 
+          add = "mean_se")+
+  stat_compare_means(method = "t.test")
+
+# Boxplot of of Filtered data
+filtered_iris_boxplot <- ggboxplot(filtered_iris, x = "Species", y="Sepal.Length",
+          color = "Species", palette = c("pink", "orange"),
+          add = "jitter", 
+          shape = "Species")
+filtered_iris_boxplot
+
+# .. with comparisons
+filtered_iris_boxplot+stat_compare_means(method = "t.test")
+
+# Boxplot of of full iris data
+iris_boxplot <- ggboxplot(iris, x = "Species", y="Sepal.Length",
+                          color = "Species", palette = c("pink", "orange", "green"),
+                          add = "jitter", 
+                          shape = "Species")
+
+# .. with comparisons
+# anova
+iris_boxplot + stat_compare_means(method = "anova")
+# pairwise comparisons
+my_comparisons <- list(c(1,2), # correspond to: c("versicolor", "setosa")
+                       c(2,3), # correspond to: c("verisicolor", "virginica")
+                       c(1,3)) # correspond to: ("setosa", "virginica")
+
+
+iris_boxplot + stat_compare_means(comparisons = my_comparisons)+ # p values of pairwise comparisons 
+  stat_compare_means(label.y = 10) # add anova
 
 
 
 
-ggplot(iris,aes(x=Sepal.Length, y= Sepal.Width))+
-  geom_point()+
-  geom_smooth()
 
-# Per group
-ggplot(iris,aes(x=Sepal.Length, y= Sepal.Width, color = Species))+
-  geom_point()+
-  geom_smooth()
 
